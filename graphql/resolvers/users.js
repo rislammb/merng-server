@@ -6,7 +6,7 @@ const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
 const {
   validateRegisterInput,
-  validataLoginInput
+  validataLoginInput,
 } = require('../../util/validators');
 
 function generateToken(user) {
@@ -14,10 +14,10 @@ function generateToken(user) {
     {
       id: user.id,
       email: user.email,
-      username: user.username
+      username: user.username,
     },
     SECRET_KEY,
-    { expiresIn: '1h' }
+    { expiresIn: '7d' }
   );
 }
 
@@ -46,7 +46,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        token
+        token,
       };
     },
     async register(
@@ -68,8 +68,8 @@ module.exports = {
       if (user) {
         throw new UserInputError('Username is taken', {
           errors: {
-            username: 'This username is taken'
-          }
+            username: 'This username is taken',
+          },
         });
       }
       // hash password and create an auth token
@@ -79,7 +79,7 @@ module.exports = {
         email,
         username,
         password,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       });
 
       const res = await newUser.save();
@@ -88,8 +88,8 @@ module.exports = {
       return {
         ...res._doc,
         id: res._id,
-        token
+        token,
       };
-    }
-  }
+    },
+  },
 };
